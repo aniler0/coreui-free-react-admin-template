@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { Link, useHistory } from 'react-router-dom'
 import {
   CButton,
@@ -17,19 +18,20 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { apiLogin } from 'src/services/api/utils/loginapi'
 
-const Login = () => {
+const Login = ({ setIsAuth }) => {
   const [input, setInput] = useState({ Subject: '', Password: '' })
   const history = useHistory()
-
   const login = (model) => {
     apiLogin.login(model).then((res) => {
       if (typeof res.AccessToken != 'undefined') {
         localStorage.setItem('token', res.AccessToken)
-        localStorage.setItem('RefreshToken', res.RefreshToken)
+        localStorage.setItem('refreshToken', res.RefreshToken)
+        setIsAuth(true)
         history.push('/dashboard')
       }
     })
   }
+
   const handleClick = () => {
     login(input)
   }
@@ -112,6 +114,10 @@ const Login = () => {
       </CContainer>
     </div>
   )
+}
+
+Login.propTypes = {
+  setIsAuth: PropTypes.func.isRequired,
 }
 
 export default Login
