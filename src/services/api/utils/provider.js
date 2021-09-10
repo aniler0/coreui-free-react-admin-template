@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { handleError, handleResponse } from './response'
 
+const token = localStorage.getItem('token')
+
+const headers = {
+  Authorization: `Bearer ${token}`,
+}
 const BASE_URL = 'http://chosenapp.co:7000/api/v1' //our base url of api endpoint
 
 export const apiProvider = {
@@ -16,7 +21,10 @@ export const apiProvider = {
       .catch(handleError)
   },
   logout: (resource, model) => {
-    return axios.put(`${BASE_URL}/${resource}`, model).then(handleResponse).catch(handleError)
+    return axios
+      .put(`${BASE_URL}/${resource}`, model, { headers })
+      .then(handleResponse)
+      .catch(handleError)
   },
   logoutAll: (resource) => {
     return axios.put(`${BASE_URL}/${resource}`).then(handleResponse).catch(handleError)

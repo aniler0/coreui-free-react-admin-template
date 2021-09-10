@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   CAvatar,
   CBadge,
@@ -23,8 +24,23 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
+import { apiLogout } from 'src/services/api/utils/logoutapi'
 
-const AppHeaderDropdown = () => {
+const AppHeaderDropdown = ({ setIsAuth }) => {
+  const logout = (model) => {
+    apiLogout.logout(model).then((res) => {
+      console.log(res)
+      localStorage.removeItem('token')
+      localStorage.removeItem('refreshToken')
+      setIsAuth(false)
+    })
+  }
+  const handleClick = () => {
+    const token = JSON.stringify(localStorage.getItem('token'))
+    logout({
+      Token: token,
+    })
+  }
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
@@ -84,13 +100,16 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownItem onClick={handleClick} href="#">
           <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
+          Logout Account
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
   )
+}
+AppHeaderDropdown.propTypes = {
+  setIsAuth: PropTypes.func.isRequired,
 }
 
 export default AppHeaderDropdown

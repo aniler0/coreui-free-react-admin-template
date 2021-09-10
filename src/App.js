@@ -31,7 +31,13 @@ const App = () => {
             name="Login Page"
             render={(props) => <Login {...props} setIsAuth={setIsAuth} />}
           />
-          <ProtectedRoute path="/" name="Home" component={DefaultLayout} isAuth={isAuth} />
+          <ProtectedRoute
+            path="/"
+            name="Home"
+            component={DefaultLayout}
+            isAuth={isAuth}
+            setIsAuth={setIsAuth}
+          />
 
           <Route
             exact
