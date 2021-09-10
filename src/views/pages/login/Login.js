@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -19,16 +19,18 @@ import { apiLogin } from 'src/services/api/utils/loginapi'
 
 const Login = () => {
   const [input, setInput] = useState({ Subject: '', Password: '' })
+  const history = useHistory()
 
   const login = (model) => {
     apiLogin.login(model).then((res) => {
-      console.log(res)
-      localStorage.setItem('token', res.AccessToken)
-      localStorage.setItem('RefreshToken', res.RefreshToken)
+      if (typeof res.AccessToken != 'undefined') {
+        localStorage.setItem('token', res.AccessToken)
+        localStorage.setItem('RefreshToken', res.RefreshToken)
+        history.push('/dashboard')
+      }
     })
   }
   const handleClick = () => {
-    console.log(input)
     login(input)
   }
   const handleChange = (event) => {
